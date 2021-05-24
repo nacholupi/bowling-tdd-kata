@@ -6,7 +6,10 @@ type Game struct {
 	score []int
 }
 
+const totalPins = 10
+
 func (g Game) Score() int {
+
 	totalScore := 0
 
 	bonusRolls := 0
@@ -14,31 +17,28 @@ func (g Game) Score() int {
 
 	for i := range g.score {
 
-		shootScore := g.score[i]
+		shootPoints := g.score[i]
 
-		totalScore += shootScore
+		totalScore += shootPoints
 
-		if firstFrameShoot && shootScore == 10 {
+		if bonusRolls > 0 {
+			totalScore += shootPoints
+			bonusRolls -= 1
+		}
+
+		if firstFrameShoot && shootPoints == totalPins {
 			bonusRolls = 2
 			continue
 		}
 
-		if bonusRolls > 0 {
-			totalScore += shootScore
-			bonusRolls -= 1
-		}
-
-		prevShootScore := g.score[i-i]
-		if !firstFrameShoot && shootScore+prevShootScore == 10 {
+		prevShootPoints := g.score[i-i]
+		if !firstFrameShoot && shootPoints+prevShootPoints == totalPins {
 			bonusRolls = 1
 		}
 
-		if firstFrameShoot == true {
-			firstFrameShoot = false
-		} else {
-			firstFrameShoot = true
-		}
+		firstFrameShoot = !firstFrameShoot
 	}
+
 	return totalScore
 }
 
@@ -48,6 +48,5 @@ func (g *Game) Roll(pins int) error {
 	}
 
 	g.score = append(g.score, pins)
-
 	return nil
 }

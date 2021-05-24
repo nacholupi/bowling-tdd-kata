@@ -19,18 +19,18 @@ func TestGame_Roll_Returns_Illegal_Arg(t *testing.T) {
 		pins int
 	}{
 		{
-			name: "LESS_THAN_ZERO",
+			name: "Less than zero",
 			pins: -1,
 		},
 		{
-			name: "MORE_THAN_TEN",
+			name: "More than ten",
 			pins: 11,
 		},
 	}
 
-	g := Game{}
 	for _, test := range tests {
 		t.Run(test.name, func(t *testing.T) {
+			g := Game{}
 
 			err := g.Roll(test.pins)
 
@@ -39,44 +39,56 @@ func TestGame_Roll_Returns_Illegal_Arg(t *testing.T) {
 	}
 }
 
-func TestGame_Roll_Rough_Patch(t *testing.T) {
-	g := Game{}
-
-	for i := 0; i < 20; i++ {
-		_ = g.Roll(1)
+func TestGame_Roll_Combinations(t *testing.T) {
+	tests := []struct {
+		name  string
+		rolls []int
+		score int
+	}{
+		{
+			name: "Rough patch",
+			rolls: []int{
+				1, 1, 1, 1, 1, 1, 1, 1, 1, 1,
+				1, 1, 1, 1, 1, 1, 1, 1, 1, 1},
+			score: 20,
+		},
+		{
+			name:  "First strike",
+			rolls: []int{10, 1, 1},
+			score: 14,
+		},
+		{
+			name:  "First spare",
+			rolls: []int{5, 5, 2, 2},
+			score: 16,
+		},
+		{
+			name:  "First spare starting with zero",
+			rolls: []int{0, 10, 2, 2},
+			score: 16,
+		},
+		{
+			name:  "First spare starting with zero",
+			rolls: []int{0, 10, 2, 2},
+			score: 16,
+		},
+		{
+			name:  "Two consecutive strikes",
+			rolls: []int{10, 10, 1, 2},
+			score: 36,
+		},
 	}
 
-	assert.Equal(t, 20, g.Score())
-}
+	for _, test := range tests {
+		t.Run(test.name, func(t *testing.T) {
 
-func TestGame_Roll_First_Strike(t *testing.T) {
-	g := Game{}
+			g := Game{}
 
-	_ = g.Roll(10)
-	_ = g.Roll(1)
-	_ = g.Roll(1)
+			for _, roll := range test.rolls {
+				_ = g.Roll(roll)
+			}
 
-	assert.Equal(t, 14, g.Score())
-}
-
-func TestGame_Roll_First_Spare(t *testing.T) {
-	g := Game{}
-
-	_ = g.Roll(5)
-	_ = g.Roll(5)
-	_ = g.Roll(2)
-	_ = g.Roll(2)
-
-	assert.Equal(t, 16, g.Score())
-}
-
-func TestGame_Roll_First_Spare_Starting_With_Zero(t *testing.T) {
-	g := Game{}
-
-	_ = g.Roll(0)
-	_ = g.Roll(10)
-	_ = g.Roll(2)
-	_ = g.Roll(2)
-
-	assert.Equal(t, 16, g.Score())
+			assert.Equal(t, test.score, g.Score())
+		})
+	}
 }
