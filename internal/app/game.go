@@ -8,8 +8,36 @@ type Game struct {
 
 func (g Game) Score() int {
 	totalScore := 0
-	for _, s := range g.score {
-		totalScore += s
+
+	bonusRolls := 0
+	firstFrameShoot := true
+
+	for i := range g.score {
+
+		shootScore := g.score[i]
+
+		totalScore += shootScore
+
+		if firstFrameShoot && shootScore == 10 {
+			bonusRolls = 2
+			continue
+		}
+
+		if bonusRolls > 0 {
+			totalScore += shootScore
+			bonusRolls -= 1
+		}
+
+		prevShootScore := g.score[i-i]
+		if !firstFrameShoot && shootScore+prevShootScore == 10 {
+			bonusRolls = 1
+		}
+
+		if firstFrameShoot == true {
+			firstFrameShoot = false
+		} else {
+			firstFrameShoot = true
+		}
 	}
 	return totalScore
 }
