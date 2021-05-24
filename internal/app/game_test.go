@@ -68,11 +68,6 @@ func TestGame_Roll_Combinations(t *testing.T) {
 			score: 16,
 		},
 		{
-			name:  "First spare starting with zero",
-			rolls: []int{0, 10, 2, 2},
-			score: 16,
-		},
-		{
 			name:  "Two consecutive strikes",
 			rolls: []int{10, 10, 1, 2},
 			score: 36,
