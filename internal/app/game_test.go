@@ -13,15 +13,7 @@ func TestGame_Score_InitZero(t *testing.T) {
 	assert.Equal(t, 0, score)
 }
 
-func TestGame_Roll(t *testing.T) {
-	g := Game{}
-
-	err := g.Roll(10)
-
-	assert.NoError(t, err)
-}
-
-func TestGame_Roll_returns_illegal_arg(t *testing.T) {
+func TestGame_Roll_Returns_Illegal_Arg(t *testing.T) {
 	tests := []struct {
 		name string
 		pins int
@@ -46,21 +38,12 @@ func TestGame_Roll_returns_illegal_arg(t *testing.T) {
 		})
 	}
 }
-
-func TestGame_Roll_retain_score(t *testing.T) {
+func TestGame_Roll_Rough_Patch(t *testing.T) {
 	g := Game{}
 
-	err := g.Roll(9)
+	for i := 0; i < 20; i++ {
+		_ = g.Roll(1)
+	}
 
-	assert.NoError(t, err)
-	assert.Equal(t, 9, g.Score())
-}
-
-func TestGame_Roll_add_score(t *testing.T) {
-	g := Game{}
-
-	_ = g.Roll(9)
-	_ = g.Roll(5)
-
-	assert.Equal(t, 14, g.Score())
+	assert.Equal(t, 20, g.Score())
 }
