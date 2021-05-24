@@ -3,11 +3,15 @@ package app
 import "fmt"
 
 type Game struct {
-	score int
+	score []int
 }
 
 func (g Game) Score() int {
-	return g.score
+	totalScore := 0
+	for _, s := range g.score {
+		totalScore += s
+	}
+	return totalScore
 }
 
 func (g *Game) Roll(pins int) error {
@@ -15,6 +19,7 @@ func (g *Game) Roll(pins int) error {
 		return fmt.Errorf("illegal argument: choose a number between 0 and 10")
 	}
 
-	g.score = pins
+	g.score = append(g.score, pins)
+
 	return nil
 }
