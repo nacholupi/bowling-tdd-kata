@@ -70,7 +70,7 @@ func TestGame_Roll_Combinations(t *testing.T) {
 		{
 			name:  "Two consecutive strikes",
 			rolls: []int{10, 10, 1, 2},
-			score: 36,
+			score: 37,
 		},
 	}
 

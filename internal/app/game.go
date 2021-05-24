@@ -12,7 +12,6 @@ func (g Game) Score() int {
 
 	totalScore := 0
 
-	bonusRolls := 0
 	firstFrameShoot := true
 
 	for i := range g.score {
@@ -21,25 +20,27 @@ func (g Game) Score() int {
 
 		totalScore += shootPoints
 
-		if bonusRolls > 0 {
-			totalScore += shootPoints
-			bonusRolls -= 1
-		}
-
-		if firstFrameShoot && shootPoints == totalPins {
-			bonusRolls = 2
+		if g.isStrike(firstFrameShoot, i) {
+			totalScore += g.score[i+1] + g.score[i+2]
 			continue
 		}
 
-		prevShootPoints := g.score[i-i]
-		if !firstFrameShoot && shootPoints+prevShootPoints == totalPins {
-			bonusRolls = 1
+		if g.isSpare(firstFrameShoot, i) {
+			totalScore += g.score[i+1]
 		}
 
 		firstFrameShoot = !firstFrameShoot
 	}
 
 	return totalScore
+}
+
+func (g Game) isSpare(firstFrameShoot bool, i int) bool {
+	return !firstFrameShoot && g.score[i]+g.score[i-1] == totalPins
+}
+
+func (g Game) isStrike(firstFrameShoot bool, i int) bool {
+	return firstFrameShoot && g.score[i] == totalPins
 }
 
 func (g *Game) Roll(pins int) error {
