@@ -5,14 +5,6 @@ import (
 	"testing"
 )
 
-func TestGame_Score_InitZero(t *testing.T) {
-	g := Game{}
-
-	score := g.Score()
-
-	assert.Equal(t, 0, score)
-}
-
 func TestGame_Roll_Returns_Illegal_Arg(t *testing.T) {
 	tests := []struct {
 		name string
@@ -71,6 +63,15 @@ func TestGame_Roll_Combinations(t *testing.T) {
 			name:  "Two consecutive strikes",
 			rolls: []int{10, 10, 1, 2},
 			score: 37,
+		},
+		{
+			name: "Perfect score",
+			rolls: []int{
+				10, 10, 10, 10, 10,
+				10, 10, 10, 10, 10,
+				10, 10,
+			},
+			score: 300,
 		},
 	}
 

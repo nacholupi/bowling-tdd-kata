@@ -7,40 +7,44 @@ type Game struct {
 }
 
 const totalPins = 10
+const totalFrames = 10
 
 func (g Game) Score() int {
 
 	totalScore := 0
+	scoreIndex := 0
 
-	firstFrameShoot := true
+	for frameNum := 1; frameNum <= totalFrames; frameNum++ {
 
-	for i := range g.score {
+		totalScore += g.scoreValue(scoreIndex) + g.scoreValue(scoreIndex+1)
 
-		shootPoints := g.score[i]
-
-		totalScore += shootPoints
-
-		if g.isStrike(firstFrameShoot, i) {
-			totalScore += g.score[i+1] + g.score[i+2]
+		if g.isStrike(scoreIndex) {
+			totalScore += g.scoreValue(scoreIndex + 2)
+			scoreIndex += 1
 			continue
 		}
-
-		if g.isSpare(firstFrameShoot, i) {
-			totalScore += g.score[i+1]
+		if g.isSpare(scoreIndex) {
+			totalScore += g.scoreValue(scoreIndex + 2)
 		}
-
-		firstFrameShoot = !firstFrameShoot
+		scoreIndex += 2
 	}
 
 	return totalScore
 }
 
-func (g Game) isSpare(firstFrameShoot bool, i int) bool {
-	return !firstFrameShoot && g.score[i]+g.score[i-1] == totalPins
+func (g Game) scoreValue(i int) int {
+	if i >= len(g.score) {
+		return 0
+	}
+	return g.score[i]
 }
 
-func (g Game) isStrike(firstFrameShoot bool, i int) bool {
-	return firstFrameShoot && g.score[i] == totalPins
+func (g Game) isSpare(i int) bool {
+	return g.scoreValue(i)+g.scoreValue(i+1) == totalPins
+}
+
+func (g Game) isStrike(i int) bool {
+	return g.scoreValue(i) == totalPins
 }
 
 func (g *Game) Roll(pins int) error {
